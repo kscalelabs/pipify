@@ -1,2 +1,3 @@
 # pipify
-Utility to make a python package
+
+Welcome to the pipify project!
