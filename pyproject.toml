@@ -30,6 +30,9 @@ warn_redundant_casts = true
 incremental = true
 namespace_packages = false
 
+# Exclude template directory since it contains files that are templates, not actual modules
+exclude = ["pipify/template/"]
+
 # Uncomment to exclude modules from Mypy.
 # [[tool.mypy.overrides]]
 # module = []
