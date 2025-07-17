@@ -113,7 +113,7 @@ def run_generator(args: argparse.Namespace) -> None:
         "[[PROJECT PYTHON VERSION]]": py_ver,
     }
 
-    src_dir = Path(pkg_resources.files("pipify") / "template")
+    src_dir = Path(str(pkg_resources.files("pipify") / "template"))
     tgt_dir = (Path.cwd() / name).resolve()
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
