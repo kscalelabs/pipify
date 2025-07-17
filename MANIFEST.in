@@ -1,1 +1,2 @@
 recursive-include pipify/ *.py *.txt py.typed MANIFEST.in
+recursive-include pipify/template *.*

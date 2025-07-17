@@ -4,7 +4,7 @@
 
 import re
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 with open("README.md", "r", encoding="utf-8") as f:
     long_description: str = f.read()
@@ -39,7 +39,8 @@ setup(
     python_requires=">=3.11",
     install_requires=requirements,
     extras_require={"dev": requirements_dev},
-    packages=["pipify"],
+    packages=find_packages(),
+    include_package_data=True,
     entry_points={
         "console_scripts": [
             "pipify=pipify.cli:main",

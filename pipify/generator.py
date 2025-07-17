@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import re
 from pathlib import Path
+from importlib import resources as pkg_resources
 
 
 def get_default_author() -> str:
@@ -112,7 +113,7 @@ def run_generator(args: argparse.Namespace) -> None:
         "[[PROJECT PYTHON VERSION]]": py_ver,
     }
 
-    src_dir = (Path(__file__).parent / "template").resolve()
+    src_dir = Path(pkg_resources.files("pipify") / "template")
     tgt_dir = (Path.cwd() / name).resolve()
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
