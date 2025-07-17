@@ -76,9 +76,23 @@ def run_generator(args: argparse.Namespace) -> None:
 
     name = args.name or _prompt("Project name?", None, non_int)
     description = args.description or _prompt("Description", f"The {name} project", non_int)
-    author = args.author or _prompt("Author", get_default_author(), non_int)
-    email = args.email or _prompt("Email", get_default_email(), non_int)
-    url = args.url or _prompt("Repo URL", get_default_url(), non_int)
+    try:
+        default_author = get_default_author()
+    except ValueError:
+        default_author = None
+    author = args.author or _prompt("Author", default_author, non_int)
+
+    try:
+        default_email = get_default_email()
+    except ValueError:
+        default_email = None
+    email = args.email or _prompt("Email", default_email, non_int)
+
+    try:
+        default_url = get_default_url()
+    except ValueError:
+        default_url = None
+    url = args.url or _prompt("Repo URL", default_url, non_int)
     py_ver = _prompt("Min Python version", args.python_version, non_int)
     py_name = args.python_name or _prompt("Python package name", name.replace("-", "_"), non_int)
 
