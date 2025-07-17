@@ -9,7 +9,7 @@ from pathlib import Path
 
 def get_default_author() -> str:
     try:
-        import git
+        import git  # noqa: PLC0415
 
         return git.config.GitConfigParser().get_value("user", "name")  # type: ignore[return-value]
     except Exception:
@@ -18,7 +18,7 @@ def get_default_author() -> str:
 
 def get_default_email() -> str:
     try:
-        import git
+        import git  # noqa: PLC0415
 
         return git.config.GitConfigParser().get_value("user", "email")  # type: ignore[return-value]
     except Exception:
@@ -34,7 +34,7 @@ def cleanup_url(s: str) -> str:
 
 def get_default_url() -> str:
     try:
-        import git
+        import git  # noqa: PLC0415
 
         repo = git.Repo(search_parent_directories=True)
         return cleanup_url(repo.remote().url)

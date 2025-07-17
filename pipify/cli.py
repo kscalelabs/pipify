@@ -10,7 +10,7 @@ SubCmd = Callable[[argparse.Namespace], None]
 
 
 def _build_parser() -> tuple[argparse.ArgumentParser, dict[str, SubCmd]]:
-    from .generator import add_common_args, run_generator  # local import to avoid cycles
+    from .generator import add_common_args, run_generator  # noqa: PLC0415
 
     parser = argparse.ArgumentParser(prog="pipify", description="Utility for templated Python packages")
     subparsers = parser.add_subparsers(dest="command", required=True)
