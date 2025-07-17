@@ -10,12 +10,16 @@ with open("README.md", "r", encoding="utf-8") as f:
     long_description: str = f.read()
 
 
+def _clean(reqs: list[str]) -> list[str]:
+    return [ln.strip() for ln in reqs if ln.strip() and not ln.startswith("#")]
+
+
 with open("pipify/requirements.txt", "r", encoding="utf-8") as f:
-    requirements: list[str] = f.read().splitlines()
+    requirements = _clean(f.readlines())
 
 
 with open("pipify/requirements-dev.txt", "r", encoding="utf-8") as f:
-    requirements_dev: list[str] = f.read().splitlines()
+    requirements_dev = _clean(f.readlines())
 
 
 with open("pipify/__init__.py", "r", encoding="utf-8") as fh:
@@ -34,12 +38,11 @@ setup(
     long_description_content_type="text/markdown",
     python_requires=">=3.11",
     install_requires=requirements,
-    tests_require=requirements_dev,
     extras_require={"dev": requirements_dev},
     packages=["pipify"],
-    # entry_points={
-    #     "console_scripts": [
-    #         "pipify.cli:main",
-    #     ],
-    # },
+    entry_points={
+        "console_scripts": [
+            "pipify=pipify.cli:main",
+        ],
+    },
 )
