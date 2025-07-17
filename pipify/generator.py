@@ -88,7 +88,7 @@ def run_generator(args):
     }
 
     src_dir = (Path(__file__).parent / "template").resolve()
-    tgt_dir = (Path.cwd() / py_name).resolve()
+    tgt_dir = (Path.cwd() / name).resolve()
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
     def copy_tree(src: Path, dst: Path):
