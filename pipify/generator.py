@@ -70,6 +70,12 @@ def add_common_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--url")
     p.add_argument("--python-version", default="3.11")
     p.add_argument("--python-name", help="Python package name (defaults to project name with hyphens -> underscores)")
+    p.add_argument(
+        "--target-dir",
+        "-o",
+        metavar="DIR",
+        help="Directory in which the project folder will be created (defaults to current directory)",
+    )
 
 
 def run_generator(args: argparse.Namespace) -> None:
@@ -97,6 +103,8 @@ def run_generator(args: argparse.Namespace) -> None:
     py_ver = _prompt("Min Python version", args.python_version, non_int)
     py_name = args.python_name or _prompt("Python package name", name.replace("-", "_"), non_int)
 
+    target_dir = args.target_dir or _prompt("Target directory", str(Path.cwd()), non_int)
+
     # validation unchanged
     if not re.fullmatch(r"[a-zA-Z_][a-zA-Z0-9_-]*", name):
         raise ValueError(f"Invalid project name: {name}")
@@ -114,7 +122,7 @@ def run_generator(args: argparse.Namespace) -> None:
     }
 
     src_dir = Path(str(pkg_resources.files("pipify") / "template"))
-    tgt_dir = (Path.cwd() / name).resolve()
+    tgt_dir = (Path(target_dir).expanduser().resolve() / name)
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
     def copy_tree(src: Path, dst: Path) -> None:
