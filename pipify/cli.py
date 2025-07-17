@@ -4,8 +4,7 @@
 from __future__ import annotations
 
 import argparse
-from importlib import import_module
-from typing import Any, Callable
+from typing import Callable
 
 SubCmd = Callable[[argparse.Namespace], None]
 

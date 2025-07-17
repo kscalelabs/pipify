@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import re
 from pathlib import Path
 
@@ -50,7 +51,7 @@ def _prompt(msg: str, default: str | None, non_interactive: bool) -> str:
     return default or input(f"{msg}: ").strip()
 
 
-def add_common_args(p):
+def add_common_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("name", nargs="?", help="Project name (e.g. kinfer-evals)")
     p.add_argument("--description")
     p.add_argument("--author")
@@ -60,7 +61,7 @@ def add_common_args(p):
     p.add_argument("--python-name", help="Python package name (defaults to project name with hyphens -> underscores)")
 
 
-def run_generator(args):
+def run_generator(args: argparse.Namespace) -> None:
     non_int = getattr(args, "non_interactive", False)
 
     name = args.name or _prompt("Project name?", None, non_int)
@@ -91,7 +92,7 @@ def run_generator(args):
     tgt_dir = (Path.cwd() / name).resolve()
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
-    def copy_tree(src: Path, dst: Path):
+    def copy_tree(src: Path, dst: Path) -> None:
         if src.is_dir():
             if src.name in {"__pycache__", ".git", ".ruff_cache", ".pytest_cache"}:
                 return
