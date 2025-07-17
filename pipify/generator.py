@@ -152,7 +152,7 @@ def run_generator(args: argparse.Namespace) -> None:
 
     if git_remote:
         try:
-            import subprocess
+            import subprocess  # noqa: PLC0415
 
             subprocess.run(
                 ["git", "init", "--initial-branch", "main"],
