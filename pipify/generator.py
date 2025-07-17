@@ -152,7 +152,7 @@ def run_generator(args: argparse.Namespace) -> None:
 
     if git_remote:
         try:
-            import subprocess  # noqa: PLC0415
+            import subprocess
 
             subprocess.run(
                 ["git", "init", "--initial-branch", "main"],
@@ -169,7 +169,19 @@ def run_generator(args: argparse.Namespace) -> None:
                 stderr=subprocess.DEVNULL,
             )
 
-            # Do an empty commit and push to set upstream
+            # does the remote already have a 'main' branch?
+            remote_has_main = (
+                subprocess.run(
+                    ["git", "ls-remote", "--exit-code", "--heads", "origin", "main"],
+                    cwd=tgt_dir,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                    check=False,
+                ).returncode
+                == 0
+            )
+
+            # always make an initial commit so the repo isn't empty locally
             (tgt_dir / ".gitkeep").touch()
             subprocess.run(
                 ["git", "add", ".gitkeep"],
@@ -186,12 +198,24 @@ def run_generator(args: argparse.Namespace) -> None:
                 stderr=subprocess.DEVNULL,
             )
 
-            # first push sets upstream (-u)
-            subprocess.run(
-                ["git", "push", "-u", "origin", "main"],
-                cwd=tgt_dir,
-                check=True,
-            )
+            if remote_has_main:
+                # remote already has commits → just set upstream
+                subprocess.run(
+                    ["git", "branch", "--set-upstream-to=origin/main", "main"],
+                    cwd=tgt_dir,
+                    check=True,
+                    stdout=subprocess.DEVNULL,
+                    stderr=subprocess.DEVNULL,
+                )
+                print("🔗  Linked local 'main' to existing origin/main (no push).")
+            else:
+                # remote is empty → first push creates origin/main
+                subprocess.run(
+                    ["git", "push", "-u", "origin", "main"],
+                    cwd=tgt_dir,
+                    check=True,
+                )
+                print("🚀  Pushed initial commit and set upstream to origin/main.")
 
             print(f"📦  Initialised git repository and set origin → {git_remote}")
         except Exception as e:
