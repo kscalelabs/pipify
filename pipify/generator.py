@@ -168,6 +168,31 @@ def run_generator(args: argparse.Namespace) -> None:
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL,
             )
+
+            # Do an empty commit and push to set upstream
+            (tgt_dir / ".gitkeep").touch()
+            subprocess.run(
+                ["git", "add", ".gitkeep"],
+                cwd=tgt_dir,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            subprocess.run(
+                ["git", "commit", "-m", "Initial scaffold"],
+                cwd=tgt_dir,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+
+            # first push sets upstream (-u)
+            subprocess.run(
+                ["git", "push", "-u", "origin", "main"],
+                cwd=tgt_dir,
+                check=True,
+            )
+
             print(f"📦  Initialised git repository and set origin → {git_remote}")
         except Exception as e:
             print(f"⚠️  Could not initialise git or set remote: {e}")
