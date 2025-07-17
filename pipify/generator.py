@@ -52,7 +52,17 @@ def _prompt(msg: str, default: str | None, non_interactive: bool) -> str:
 
 
 def add_common_args(p: argparse.ArgumentParser) -> None:
-    p.add_argument("name", nargs="?", help="Project name (e.g. kinfer-evals)")
+    p.add_argument(
+        "name",
+        nargs="?",
+        help="Project name (e.g. kinfer-evals). Can also be given with --name.",
+    )
+    p.add_argument(
+        "--name",
+        dest="name",
+        metavar="NAME",
+        help=argparse.SUPPRESS,
+    )
     p.add_argument("--description")
     p.add_argument("--author")
     p.add_argument("--email")
