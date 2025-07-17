@@ -44,6 +44,7 @@ py-files := $(shell find . -name '*.py')
 
 format:
 	@black $(py-files)
+	@ruff check --fix $(py-files)
 	@ruff format $(py-files)
 .PHONY: format
 

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import argparse
 import re
-from pathlib import Path
 from importlib import resources as pkg_resources
+from pathlib import Path
 
 
 def get_default_author() -> str:
