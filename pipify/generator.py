@@ -71,6 +71,12 @@ def add_common_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--python-version", default="3.11")
     p.add_argument("--python-name", help="Python package name (defaults to project name with hyphens -> underscores)")
     p.add_argument(
+        "--git-remote",
+        "-g",
+        metavar="URL",
+        help="If provided, initialise git and set this URL as the origin remote",
+    )
+    p.add_argument(
         "--target-dir",
         "-o",
         metavar="DIR",
@@ -100,6 +106,8 @@ def run_generator(args: argparse.Namespace) -> None:
     except ValueError:
         default_url = None
     url = args.url or _prompt("Repo URL", default_url, non_int)
+
+    git_remote = args.git_remote or _prompt("Git remote URL (blank to skip)", "", non_int).strip()
     py_ver = _prompt("Min Python version", args.python_version, non_int)
     py_name = args.python_name or _prompt("Python package name", name.replace("-", "_"), non_int)
 
@@ -122,7 +130,7 @@ def run_generator(args: argparse.Namespace) -> None:
     }
 
     src_dir = Path(str(pkg_resources.files("pipify") / "template"))
-    tgt_dir = (Path(target_dir).expanduser().resolve() / name)
+    tgt_dir = Path(target_dir).expanduser().resolve() / name
     tgt_dir.mkdir(parents=True, exist_ok=True)
 
     def copy_tree(src: Path, dst: Path) -> None:
@@ -141,3 +149,25 @@ def run_generator(args: argparse.Namespace) -> None:
     copy_tree(src_dir, tgt_dir)
     (tgt_dir / "project").rename(tgt_dir / py_name)
     print(f"🚀  Created project at {tgt_dir}")
+
+    if git_remote:
+        try:
+            import subprocess
+
+            subprocess.run(
+                ["git", "init", "--initial-branch", "main"],
+                cwd=tgt_dir,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            subprocess.run(
+                ["git", "remote", "add", "origin", git_remote],
+                cwd=tgt_dir,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            print(f"📦  Initialised git repository and set origin → {git_remote}")
+        except Exception as e:
+            print(f"⚠️  Could not initialise git or set remote: {e}")
